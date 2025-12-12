@@ -1,0 +1,42 @@
+<!doctype html>
+<title>Basic Emulator</title>
+
+<script src="./scripts/ibv86.js"></script>
+<script>
+"use strict";
+
+window.onload = function()
+{
+    var emulator = window.emulator = new V86({
+        wasm_path: "./boot/v86.wasm",
+        
+        // FIX 1: Increased Memory to 256MB (32MB is too low for Linux to unpack)
+        memory_size: 256 * 1024 * 1024,
+        
+        // FIX 2: Increased VGA Memory to 8MB for better graphics support
+        vga_memory_size: 8 * 1024 * 1024,
+        
+        screen_container: document.getElementById("screen_container"),
+        
+        bios: {
+            url: "./boot/seabios.bin",
+        },
+        vga_bios: {
+            url: "./boot/vgabios.bin",
+        },
+        
+        // Ensure "linux.iso" is in the same folder as this HTML file
+        cdrom: {
+            url: "./boot/image.iso",
+        },
+
+        // NOTE: "cmdline" is removed because it is ignored during ISO boot.
+        autostart: true,
+    });
+}
+</script>
+
+<div id="screen_container">
+    <div style="white-space: pre; font: 14px monospace; line-height: 14px"></div>
+    <canvas style="display: none"></canvas>
+</div>
